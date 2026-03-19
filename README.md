@@ -1,7 +1,4 @@
 TODO list:
-- Class/Struct Dataset (features and tadget)
-- csv_parser
-- train_test_split
 - struct TreeNode
 - class DecisionTreeClassifier
 - gini
@@ -16,4 +13,6 @@ TODO list:
 
 DONE:
 - Initial commit
- 
+- Class/Struct Dataset (features and tadget)
+- csv_parser
+- train_test_split

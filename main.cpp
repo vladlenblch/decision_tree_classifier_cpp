@@ -5,7 +5,7 @@
 
 int main() {
     Dataset dataset = parse_csv("data/banknotes.txt");
-    SplitResult split = train_test_split(dataset, 0.3, 42);
+    SplitResult split = train_test_split(dataset, 0.2, 42);
 
     size_t train_0_count = split.train.target_0_count();
     size_t train_1_count = split.train.target_1_count();
@@ -32,4 +32,5 @@ int main() {
     std::cout << "Test 0 count: " << test_0_count << std::endl;
     std::cout << "Test 1 count: " << test_1_count << std::endl;
     std::cout << "Test 1 to 0 ratio: " << (double)test_1_count / test_0_count << std::endl;
+    std::cout << std::endl;
 }
