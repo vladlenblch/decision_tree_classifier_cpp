@@ -20,19 +20,16 @@ int main() {
     size_t total_1_count = train_1_count + test_1_count;
 
     std::cout << "-------------------------------\n";
-
     std::cout << "Dataset size: " << dataset.size() << "\n";
     std::cout << "Dataset 0 count: " << total_0_count << "\n";
     std::cout << "Dataset 1 count: " << total_1_count << "\n";
     std::cout << "Dataset 1 to 0 ratio: " << static_cast<double>(total_1_count) / total_0_count << "\n";
     std::cout << "-------------------------------\n";
-
     std::cout << "Train size: " << split.train.size() << "\n";
     std::cout << "Train 0 count: " << train_0_count << "\n";
     std::cout << "Train 1 count: " << train_1_count << "\n";
     std::cout << "Train 1 to 0 ratio: " << static_cast<double>(train_1_count) / train_0_count << "\n";
     std::cout << "-------------------------------\n";
-
     std::cout << "Test size: " << split.test.size() << "\n";
     std::cout << "Test 0 count: " << test_0_count << "\n";
     std::cout << "Test 1 count: " << test_1_count << "\n";
@@ -40,7 +37,6 @@ int main() {
     std::cout << "-------------------------------\n";
 
     for (std::string criterion : {"gini", "entropy"}) {
-        std::cout << "Criterion: " << criterion << "\n";
         DecisionTree tree(5, 2, criterion);
         tree.fit(split.train);
 
@@ -54,10 +50,10 @@ int main() {
         double test_precision = Metrics::precision(split.test, predictions);
         double test_recall = Metrics::recall(split.test, predictions);
 
+        std::cout << "Criterion: " << criterion << "\n";
         std::cout << "Test Accuracy: " << test_accuracy * 100.0 << "\n";
         std::cout << "Test Precision: " << test_precision * 100.0 << "\n";
         std::cout << "Test Recall: " << test_recall * 100.0 << "\n";
-        std::cout << "-------------------------------\n";
+        std::cout << "-------------------------------" << std::endl;
     }
-    std::cout << std::endl;
 }
