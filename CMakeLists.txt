@@ -10,4 +10,5 @@ add_executable(
     main.cpp
     src/parser.cpp
     src/split.cpp
+    src/tree.cpp
 )
