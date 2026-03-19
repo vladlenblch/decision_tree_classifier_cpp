@@ -1,13 +1,6 @@
 TODO list:
 - gini
 - entropy
-- find_best_split
-- build_tree
-- fit
-- predict
-- accuracy
-- precision
-- recall
 
 DONE:
 - Initial commit
@@ -16,3 +9,10 @@ DONE:
 - train_test_split
 - struct TreeNode
 - class DecisionTreeClassifier
+- find_best_split
+- build_tree
+- fit
+- predict
+- accuracy
+- precision
+- recall

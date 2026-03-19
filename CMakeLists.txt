@@ -11,4 +11,5 @@ add_executable(
     src/parser.cpp
     src/split.cpp
     src/tree.cpp
+    src/metrics.cpp
 )

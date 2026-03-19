@@ -13,18 +13,6 @@ int DecisionTree::predict(const std::vector<double>& sample) const {
     return predict_sample(sample, root.get());
 }
 
-double DecisionTree::score(const Dataset& data) const {
-    if (data.size() == 0) return 0.0;
-    
-    int correct = 0;
-    for (const auto& sample : data.samples) {
-        if (predict(sample.features) == sample.target) {
-            correct++;
-        }
-    }
-    return static_cast<double>(correct) / data.size();
-}
-
 std::unique_ptr<TreeNode> DecisionTree::build_tree(const Dataset& dataset, int depth) {
     if (depth > max_depth) {
         return std::make_unique<TreeNode>(get_majority_class(dataset));

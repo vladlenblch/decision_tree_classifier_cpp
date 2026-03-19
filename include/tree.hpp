@@ -28,8 +28,6 @@ public:
 
     int predict(const std::vector<double>& sample) const;
 
-    double score(const Dataset& dataset) const;
-
 private:
     std::unique_ptr<TreeNode> root;
     int max_depth;
