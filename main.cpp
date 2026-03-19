@@ -34,5 +34,5 @@ int main() {
     std::cout << "Test 0 count: " << test_0_count << "\n";
     std::cout << "Test 1 count: " << test_1_count << "\n";
     std::cout << "Test 1 to 0 ratio: " << static_cast<double>(test_1_count) / test_0_count << "\n";
-    std::cout << "-------------------------------\n" << std::flush;
+    std::cout << "-------------------------------" << std::endl;
 }
