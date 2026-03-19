@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <iostream>
 
-DecisionTree::DecisionTree(int max_depth, int min_samples_split):
-    root(nullptr), max_depth(max_depth), min_samples_split(min_samples_split) {}
+DecisionTree::DecisionTree(int max_depth, int min_samples_split, const std::string& criterion):
+    root(nullptr), max_depth(max_depth), min_samples_split(min_samples_split), criterion(criterion) {}
 
 void DecisionTree::fit(const Dataset& dataset) {
     root = build_tree(dataset, 0);
@@ -71,16 +71,23 @@ DecisionTree::TreeSplitResult DecisionTree::find_best_split(const Dataset& datas
 
             DatasetSplitResult dataset_split = split_dataset(dataset, static_cast<int>(feature_idx), threshold);
 
-            double parent_gini = Criteria::gini(dataset);
-            double left_gini = Criteria::gini(dataset_split.left);
-            double right_gini = Criteria::gini(dataset_split.right);
+            double parent_impurity = 0.0, left_impurity = 0.0, right_impurity = 0.0;
+            if (criterion == "gini") {
+                parent_impurity = Criteria::gini(dataset);
+                left_impurity = Criteria::gini(dataset_split.left);
+                right_impurity = Criteria::gini(dataset_split.right);
+            } else if (criterion == "entropy") {
+                parent_impurity = Criteria::entropy(dataset);
+                left_impurity = Criteria::entropy(dataset_split.left);
+                right_impurity = Criteria::entropy(dataset_split.right);
+            }
 
             size_t n = dataset.size();
             size_t n_left = dataset_split.left.size();
             size_t n_right = dataset_split.right.size();
 
-            double children_gini = (n_left * left_gini + n_right * right_gini) / static_cast<double>(n);
-            double gain = parent_gini - children_gini;
+            double children_impurity = (n_left * left_impurity + n_right * right_impurity) / static_cast<double>(n);
+            double gain = parent_impurity - children_impurity;
 
             if (gain > best_split.gain) {
                 best_split = {static_cast<int>(feature_idx), threshold, gain};

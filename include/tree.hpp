@@ -10,19 +10,21 @@ struct TreeNode {
     std::unique_ptr<TreeNode> left;
     std::unique_ptr<TreeNode> right;
 
-    explicit TreeNode(int predicted_class_value):
-        is_leaf(true), predicted_class(predicted_class_value), 
+    explicit TreeNode(int predicted_class):
+        is_leaf(true), predicted_class(predicted_class), 
         left(nullptr), right(nullptr) {}
 
-    TreeNode(int feature_index_value, double threshold_value, std::unique_ptr<TreeNode> left, std::unique_ptr<TreeNode> right):
+    TreeNode(int feature_index, double threshold, std::unique_ptr<TreeNode> left, std::unique_ptr<TreeNode> right):
         is_leaf(false), predicted_class(-1), 
-        feature_index(feature_index_value), threshold(threshold_value), 
+        feature_index(feature_index), threshold(threshold), 
         left(std::move(left)), right(std::move(right)) {}
 };
 
 class DecisionTree {
 public:
-    DecisionTree(int max_depth = 5, int min_samples_split = 2);
+    DecisionTree(int max_depth = 5,
+                 int min_samples_split = 2,
+                 const std::string& criterion = "gini");
 
     void fit(const Dataset& dataset);
 
@@ -32,6 +34,7 @@ private:
     std::unique_ptr<TreeNode> root;
     int max_depth;
     int min_samples_split;
+    std::string criterion;
 
     std::unique_ptr<TreeNode> build_tree(const Dataset& dataset, int depth);
 

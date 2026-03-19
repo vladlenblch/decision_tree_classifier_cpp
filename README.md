@@ -1,5 +1,4 @@
 TODO list:
-- entropy (very optional)
 
 DONE:
 - Initial commit
@@ -16,3 +15,4 @@ DONE:
 - precision
 - recall
 - gini
+- entropy (very optional)

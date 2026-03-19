@@ -39,21 +39,25 @@ int main() {
     std::cout << "Test 1 to 0 ratio: " << static_cast<double>(test_1_count) / test_0_count << "\n";
     std::cout << "-------------------------------\n";
 
-    DecisionTree tree(5, 2);
-    tree.fit(split.train);
+    for (std::string criterion : {"gini", "entropy"}) {
+        std::cout << "Criterion: " << criterion << "\n";
+        DecisionTree tree(5, 2, criterion);
+        tree.fit(split.train);
 
-    std::vector<int> predictions;
-    predictions.reserve(split.test.size());
-    for (const Sample& sample : split.test.samples) {
-        predictions.push_back(tree.predict(sample.features));
+        std::vector<int> predictions;
+        predictions.reserve(split.test.size());
+        for (const Sample& sample : split.test.samples) {
+            predictions.push_back(tree.predict(sample.features));
+        }
+
+        double test_accuracy = Metrics::accuracy(split.test, predictions);
+        double test_precision = Metrics::precision(split.test, predictions);
+        double test_recall = Metrics::recall(split.test, predictions);
+
+        std::cout << "Test Accuracy: " << test_accuracy * 100.0 << "\n";
+        std::cout << "Test Precision: " << test_precision * 100.0 << "\n";
+        std::cout << "Test Recall: " << test_recall * 100.0 << "\n";
+        std::cout << "-------------------------------\n";
     }
-
-    double test_accuracy = Metrics::accuracy(split.test, predictions);
-    double test_precision = Metrics::precision(split.test, predictions);
-    double test_recall = Metrics::recall(split.test, predictions);
-
-    std::cout << "Test Accuracy: " << test_accuracy * 100.0 << "\n";
-    std::cout << "Test Precision: " << test_precision * 100.0 << "\n";
-    std::cout << "Test Recall: " << test_recall * 100.0 << "\n";
-    std::cout << "-------------------------------" << std::endl;
+    std::cout << std::endl;
 }
