@@ -16,21 +16,23 @@ int main() {
     size_t total_0_count = train_0_count + test_0_count;
     size_t total_1_count = train_1_count + test_1_count;
 
-    std::cout << "Dataset size: " << dataset.size() << std::endl;
-    std::cout << "Dataset 0 count: " << total_0_count << std::endl;
-    std::cout << "Dataset 1 count: " << total_1_count << std::endl;
-    std::cout << "Dataset 1 to 0 ratio: " << (double)total_1_count / total_0_count << std::endl;
-    std::cout << std::endl;
+    std::cout << "-------------------------------\n";
 
-    std::cout << "Train size: " << split.train.size() << std::endl;
-    std::cout << "Train 0 count: " << train_0_count << std::endl;
-    std::cout << "Train 1 count: " << train_1_count << std::endl;
-    std:: cout << "Train 1 to 0 ratio: " << (double)train_1_count / train_0_count << std::endl;
-    std::cout << std::endl;
+    std::cout << "Dataset size: " << dataset.size() << "\n";
+    std::cout << "Dataset 0 count: " << total_0_count << "\n";
+    std::cout << "Dataset 1 count: " << total_1_count << "\n";
+    std::cout << "Dataset 1 to 0 ratio: " << static_cast<double>(total_1_count) / total_0_count << "\n";
+    std::cout << "-------------------------------\n";
 
-    std::cout << "Test size: " << split.test.size() << std::endl;
-    std::cout << "Test 0 count: " << test_0_count << std::endl;
-    std::cout << "Test 1 count: " << test_1_count << std::endl;
-    std::cout << "Test 1 to 0 ratio: " << (double)test_1_count / test_0_count << std::endl;
-    std::cout << std::endl;
+    std::cout << "Train size: " << split.train.size() << "\n";
+    std::cout << "Train 0 count: " << train_0_count << "\n";
+    std::cout << "Train 1 count: " << train_1_count << "\n";
+    std:: cout << "Train 1 to 0 ratio: " << static_cast<double>(train_1_count) / train_0_count << "\n";
+    std::cout << "-------------------------------\n";
+
+    std::cout << "Test size: " << split.test.size() << "\n";
+    std::cout << "Test 0 count: " << test_0_count << "\n";
+    std::cout << "Test 1 count: " << test_1_count << "\n";
+    std::cout << "Test 1 to 0 ratio: " << static_cast<double>(test_1_count) / test_0_count << "\n";
+    std::cout << "-------------------------------\n" << std::flush;
 }

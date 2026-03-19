@@ -22,7 +22,7 @@ Dataset parse_csv(const std::string& filepath) {
             if (i < 4) {
                 sample.features.push_back(num);
             } else {
-                sample.target = (int)num;
+                sample.target = static_cast<int>(num);
             }
         }
 
