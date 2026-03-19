@@ -1,4 +1,5 @@
 #include "tree.hpp"
+#include "criteria.hpp"
 #include <algorithm>
 #include <iostream>
 
@@ -61,7 +62,7 @@ DecisionTree::TreeSplitResult DecisionTree::find_best_split(const Dataset& datas
 
         std::sort(values.begin(), values.end());
 
-        for (size_t i = 0; i < n_samples; i++) {
+        for (size_t i = 0; i < n_samples - 1; i++) {
             if (values[i] == values[i + 1]) {
                 continue;
             }
@@ -70,9 +71,16 @@ DecisionTree::TreeSplitResult DecisionTree::find_best_split(const Dataset& datas
 
             DatasetSplitResult dataset_split = split_dataset(dataset, static_cast<int>(feature_idx), threshold);
 
-            double gain = static_cast<double>(n_samples) - 
-                          (dataset_split.left.size() * dataset_split.left.size() + 
-                           dataset_split.right.size() * dataset_split.right.size()) / static_cast<double>(n_samples);
+            double parent_gini = Criteria::gini(dataset);
+            double left_gini = Criteria::gini(dataset_split.left);
+            double right_gini = Criteria::gini(dataset_split.right);
+
+            size_t n = dataset.size();
+            size_t n_left = dataset_split.left.size();
+            size_t n_right = dataset_split.right.size();
+
+            double children_gini = (n_left * left_gini + n_right * right_gini) / static_cast<double>(n);
+            double gain = parent_gini - children_gini;
 
             if (gain > best_split.gain) {
                 best_split = {static_cast<int>(feature_idx), threshold, gain};
@@ -86,7 +94,7 @@ DecisionTree::DatasetSplitResult DecisionTree::split_dataset(const Dataset& data
     DatasetSplitResult result;
 
     for (const Sample& sample : dataset.samples) {
-        if (sample.features[feature_index] < threshold) {
+        if (sample.features[feature_index] <= threshold) {
             result.left.add(sample);
         } else {
             result.right.add(sample);
@@ -108,7 +116,7 @@ int DecisionTree::predict_sample(const std::vector<double>& sample, const TreeNo
         return node->predicted_class;
     }
 
-    if (sample[node->is_leaf] <= node->threshold) {
+    if (sample[node->feature_index] <= node->threshold) {
         return predict_sample(sample, node->left.get());
     } else {
         return predict_sample(sample, node->right.get());

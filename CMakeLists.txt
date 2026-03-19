@@ -12,4 +12,5 @@ add_executable(
     src/split.cpp
     src/tree.cpp
     src/metrics.cpp
+    src/criteria.cpp
 )

@@ -3,6 +3,7 @@
 #include "split.hpp"
 #include "tree.hpp"
 #include "metrics.hpp"
+#include "criteria.hpp"
 #include <iostream>
 
 int main() {
