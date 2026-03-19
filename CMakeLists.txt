@@ -9,4 +9,5 @@ add_executable(
     DecisionTreeClassifier
     main.cpp
     src/parser.cpp
+    src/split.cpp
 )
