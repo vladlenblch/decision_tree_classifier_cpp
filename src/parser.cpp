@@ -28,6 +28,5 @@ Dataset parse_csv(const std::string& filepath) {
 
         dataset.add(sample);
     }
-
     return dataset;
 }

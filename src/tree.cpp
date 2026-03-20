@@ -35,8 +35,8 @@ std::unique_ptr<TreeNode> DecisionTree::build_tree(const Dataset& dataset, int d
 
     DatasetSplitResult dataset_split = split_dataset(dataset, best_split.feature_index, best_split.threshold);
 
-    auto left_child = build_tree(dataset_split.left, depth + 1);
-    auto right_child = build_tree(dataset_split.right, depth + 1);
+    std::unique_ptr<TreeNode> left_child = build_tree(dataset_split.left, depth + 1);
+    std::unique_ptr<TreeNode> right_child = build_tree(dataset_split.right, depth + 1);
 
     return std::make_unique<TreeNode>(
         best_split.feature_index, 

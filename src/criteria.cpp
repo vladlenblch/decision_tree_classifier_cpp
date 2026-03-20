@@ -12,7 +12,7 @@ double Criteria::gini(const Dataset& dataset) {
 double Criteria::entropy(const Dataset& dataset) {
     double p0 = static_cast<double>(dataset.target_0_count()) / dataset.size();
     double p1 = static_cast<double>(dataset.target_1_count()) / dataset.size();
-    double entropy = -0.0;
+    double entropy = 0.0;
 
     if (p0 > 0.0) {
         entropy -= p0 * std::log2(p0);
