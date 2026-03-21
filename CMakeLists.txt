@@ -41,5 +41,7 @@ add_test(NAME TreeTests COMMAND tree_test)
 
 find_package(benchmark QUIET)
 
-add_executable(tree_benchmark benchmarks/benchmark_main.cpp)
-target_link_libraries(tree_benchmark PRIVATE tree_lib benchmark::benchmark)
+if(benchmark_FOUND)
+    add_executable(tree_benchmark benchmarks/benchmark_main.cpp)
+    target_link_libraries(tree_benchmark PRIVATE tree_lib benchmark::benchmark)
+endif()
