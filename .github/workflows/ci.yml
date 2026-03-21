@@ -91,5 +91,6 @@ jobs:
           build/DecisionTreeClassifier
           build/tree_test
           build/tree_benchmark
+          banknotes.txt
         generate_release_notes: true
         name: Release ${{ github.ref_name }}

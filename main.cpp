@@ -8,7 +8,7 @@
 #include "types.hpp"
 
 int main() {
-  Dataset dataset = parse_csv("data/banknotes.txt");
+  Dataset dataset = parse_csv("banknotes.txt");
   SplitResult split = train_test_split(dataset, 0.2, 42);
 
   size_t train_0_count = split.train.target_0_count();

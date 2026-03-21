@@ -152,11 +152,11 @@ BM_Fit_Entropy_5000Samples 1.2904e+10 ns   1.2900e+10 ns            1
 ## Структура проекта
 
 - `.github/workflows/` - CI/CD
-- `data/` – датасет
 - `benchmarks` - бенчмарки
 - `include/` – заголовочные файлы
 - `src/` – парсинг, сплит, дерево, метрики
 - `tests/` - тесты
+- `banknotes.txt` - датасет
 - `main.cpp` – точка входа в программу 
 - `.clang-format` - форматтер кода
 - `.clang-tidy` - линтер кода
