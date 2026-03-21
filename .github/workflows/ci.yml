@@ -35,3 +35,29 @@ jobs:
             echo ""
             echo "Main program passed - no memory errors detected"
         fi
+
+  benchmarks:
+    runs-on: ubuntu-latest
+
+    needs: test-with-asan
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++ cmake libgtest-dev libbenchmark-dev
+    
+    - name: Configure CMake (ASan OFF)
+      run: cmake -B build -DENABLE_ASAN=OFF -DCMAKE_BUILD_TYPE=Release
+    
+    - name: Build
+      run: cmake --build build
+    
+    - name: Run benchmarks
+      run: |
+        echo "Running Google Benchmark"
+        cd build
+        ./build/tree_benchmark --benchmark_min_time=0.1

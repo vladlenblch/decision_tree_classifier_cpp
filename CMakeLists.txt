@@ -3,6 +3,8 @@ project(DecisionTreeClassifier)
 
 set(CMAKE_CXX_STANDARD 23)
 
+# ------
+
 option(ENABLE_ASAN "Enable Address Sanitizer" ON)
 
 if(ENABLE_ASAN)
@@ -12,6 +14,8 @@ if(ENABLE_ASAN)
 else()
     message(STATUS "Address Sanitizer: DISABLED")
 endif()
+
+# ------
 
 add_library(tree_lib STATIC
     src/parser.cpp
@@ -26,6 +30,8 @@ target_include_directories(tree_lib PUBLIC include)
 add_executable(DecisionTreeClassifier main.cpp)
 target_link_libraries(DecisionTreeClassifier PRIVATE tree_lib)
 
+# ------
+
 enable_testing()
 
 find_package(GTest REQUIRED)
@@ -35,3 +41,15 @@ add_executable(tree_test tests/test_main.cpp)
 target_link_libraries(tree_test PRIVATE tree_lib GTest::gtest_main Threads::Threads)
 
 add_test(NAME TreeTests COMMAND tree_test)
+
+# ------
+
+find_package(benchmark REQUIRED)
+
+add_executable(tree_benchmark benchmarks/benchmark_main.cpp)
+target_link_libraries(tree_benchmark PRIVATE tree_lib benchmark::benchmark)
+
+if(ENABLE_ASAN)
+    target_compile_options(tree_benchmark PRIVATE -fno-sanitize=address)
+    target_link_options(tree_benchmark PRIVATE -fno-sanitize=address)
+endif()
