@@ -3,6 +3,16 @@ project(DecisionTreeClassifier)
 
 set(CMAKE_CXX_STANDARD 23)
 
+option(ENABLE_ASAN "Enable Address Sanitizer" ON)
+
+if(ENABLE_ASAN)
+    message(STATUS "Address Sanitizer: ENABLED")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+    set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
+else()
+    message(STATUS "Address Sanitizer: DISABLED")
+endif()
+
 add_library(tree_lib STATIC
     src/parser.cpp
     src/split.cpp

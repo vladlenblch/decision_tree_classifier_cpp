@@ -3,26 +3,35 @@ name: CI
 on:
   push:
     branches:
-      - features
+      - 'features'
 
 jobs:
-  build-and-test:
+  test-with-asan:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
-    
+
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y g++ cmake libgtest-dev
-    
-    - name: Configure CMake
-      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
-    
+
+    - name: Configure CMake (ASan ON)
+      run: cmake -B build -DENABLE_ASAN=ON -DCMAKE_BUILD_TYPE=Debug
+
     - name: Build
       run: cmake --build build
-    
-    - name: Run tests
+
+    - name: Run unit tests with ASan
       run: ctest --test-dir build --output-on-failure --verbose
+
+    - name: Run main program with ASan
+      run: |
+        echo "Running main classifier with ASan"
+        ./build/DecisionTreeClassifier
+        if [ $? -eq 0 ]; then
+            echo ""
+            echo "Main program passed - no memory errors detected"
+        fi
