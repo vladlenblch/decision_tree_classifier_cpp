@@ -32,10 +32,13 @@ target_link_libraries(DecisionTreeClassifier PRIVATE tree_lib)
 # ------
 
 enable_testing()
-find_package(GTest REQUIRED)
-add_executable(tree_test tests/test_main.cpp)
-target_link_libraries(tree_test PRIVATE tree_lib GTest::gtest_main Threads::Threads)
-add_test(NAME TreeTests COMMAND tree_test)
+find_package(GTest QUIET)
+
+if(GTest_FOUND)
+    add_executable(tree_test tests/test_main.cpp)
+    target_link_libraries(tree_test PRIVATE tree_lib GTest::gtest_main Threads::Threads)
+    add_test(NAME TreeTests COMMAND tree_test)
+endif()
 
 # ------
 
