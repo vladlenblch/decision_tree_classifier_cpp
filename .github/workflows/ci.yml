@@ -58,4 +58,4 @@ jobs:
     - name: Run benchmarks
       run: |
         echo "Running Google Benchmark"
-        ./build/tree_benchmark --benchmark_min_time=0.1
+        ./build/tree_benchmark --benchmark_min_time=1s

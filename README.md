@@ -10,11 +10,19 @@ cd decision_tree_classifier_cpp
 # собрать проект
 mkdir build
 cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
+# сборка с проверкой памяти
+cmake .. -DENABLE_ASAN=ON -DCMAKE_BUILD_TYPE=Debug
+# сборка без проверки памяти (для бенчмарков)
+cmake .. -DENABLE_ASAN=OFF -DCMAKE_BUILD_TYPE=Release
 make
 
 # запустить
 cd ..
+# запустить тесты
+./build/tree_test
+# запустить бенчмарки
+./build/tree_benchmark --benchmark_min_time=1s
+# запустить дерево 
 ./build/DecisionTreeClassifier
 ```
 
@@ -111,9 +119,31 @@ Test Recall: 97.541
 [  PASSED  ] 12 tests.
 ```
 
-### later
+### Результаты бенчмарков
 
-### later
+```zsh
+CPU Caches:
+  L1 Data 64 KiB
+  L1 Instruction 128 KiB
+  L2 Unified 4096 KiB (x10)
+Load Average: 2.47, 2.69, 2.51
+---------------------------------------------------------------------
+Benchmark                           Time             CPU   Iterations
+---------------------------------------------------------------------
+BM_Predict_Depth5                6.94 ns         6.94 ns    101503705
+BM_Predict_Depth10               17.9 ns         17.9 ns     38933230
+BM_Fit_Gini_1000Samples     385308896 ns    385301500 ns            2
+BM_Fit_Entropy_1000Samples  370184875 ns    370163500 ns            2
+BM_Fit_Gini_5000Samples    1.2683e+10 ns   1.2682e+10 ns            1
+BM_Fit_Entropy_5000Samples 1.2904e+10 ns   1.2900e+10 ns            1
+```
+
+### CI/CD
+
+Проект использует Github Actions для автоматической проверки кода:
+1) `git push` - при пуше начинается пайплайн
+2) `test-with-asan` - Unit-тесты, проверка на утечки памяти с помощью `Adress Sanitizer`
+3) `benchmarks` - замеры производительности на датасетах разного размера (без `ASan` для производительности). Требует успешного прохождения тестов
 
 ## Технологический стек и требования
 
@@ -123,6 +153,7 @@ Test Recall: 97.541
 
 - `.github/workflows/` - CI/CD
 - `data/` – датасет
+- `benchmarks` - бенчмарки
 - `include/` – заголовочные файлы
 - `src/` – парсинг, сплит, дерево, метрики
 - `tests/` - тесты
