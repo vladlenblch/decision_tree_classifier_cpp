@@ -32,7 +32,6 @@ jobs:
         echo "Running main classifier with ASan"
         ./build/DecisionTreeClassifier
         if [ $? -eq 0 ]; then
-            echo ""
             echo "Main program passed - no memory errors detected"
         fi
 

@@ -41,13 +41,5 @@ add_test(NAME TreeTests COMMAND tree_test)
 
 find_package(benchmark QUIET)
 
-if(benchmark_FOUND)
-    message(STATUS "📊 Google Benchmark: FOUND")
-    add_executable(tree_benchmark benchmarks/benchmark_main.cpp)
-    target_link_libraries(tree_benchmark PRIVATE tree_lib benchmark::benchmark)
-    
-    if(ENABLE_ASAN)
-        target_compile_options(tree_benchmark PRIVATE -fno-sanitize=address)
-        target_link_options(tree_benchmark PRIVATE -fno-sanitize=address)
-    endif()
-endif()
+add_executable(tree_benchmark benchmarks/benchmark_main.cpp)
+target_link_libraries(tree_benchmark PRIVATE tree_lib benchmark::benchmark)
