@@ -68,6 +68,49 @@ Test Recall: 97.541
 -------------------------------
 ```
 
+### Результаты выполнения тестов
+
+```zsh
+[==========] Running 12 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 6 tests from MetricsTest
+[ RUN      ] MetricsTest.PerfectAccuracy
+[       OK ] MetricsTest.PerfectAccuracy (0 ms)
+[ RUN      ] MetricsTest.ZeroAccuracy
+[       OK ] MetricsTest.ZeroAccuracy (0 ms)
+[ RUN      ] MetricsTest.PrecisionFormula
+[       OK ] MetricsTest.PrecisionFormula (0 ms)
+[ RUN      ] MetricsTest.PrecisionNoPositives
+[       OK ] MetricsTest.PrecisionNoPositives (0 ms)
+[ RUN      ] MetricsTest.RecallFormula
+[       OK ] MetricsTest.RecallFormula (0 ms)
+[ RUN      ] MetricsTest.RecallNoActualPositives
+[       OK ] MetricsTest.RecallNoActualPositives (0 ms)
+[----------] 6 tests from MetricsTest (0 ms total)
+
+[----------] 4 tests from CriteriaTest
+[ RUN      ] CriteriaTest.GiniPureNode
+[       OK ] CriteriaTest.GiniPureNode (0 ms)
+[ RUN      ] CriteriaTest.GiniMaxImpurity
+[       OK ] CriteriaTest.GiniMaxImpurity (0 ms)
+[ RUN      ] CriteriaTest.EntropyPureNode
+[       OK ] CriteriaTest.EntropyPureNode (0 ms)
+[ RUN      ] CriteriaTest.EntropyMaxImpurity
+[       OK ] CriteriaTest.EntropyMaxImpurity (0 ms)
+[----------] 4 tests from CriteriaTest (0 ms total)
+
+[----------] 2 tests from TreeTest
+[ RUN      ] TreeTest.DepthZeroReturnsMajority
+[       OK ] TreeTest.DepthZeroReturnsMajority (0 ms)
+[ RUN      ] TreeTest.BothCriteriaProduceValidResults
+[       OK ] TreeTest.BothCriteriaProduceValidResults (3 ms)
+[----------] 2 tests from TreeTest (4 ms total)
+
+[----------] Global test environment tear-down
+[==========] 12 tests from 3 test suites ran. (4 ms total)
+[  PASSED  ] 12 tests.
+```
+
 ## Технологический стек и требования
 
 - `C++23`
@@ -77,6 +120,7 @@ Test Recall: 97.541
 - `data/` – датасет
 - `include/` – заголовочные файлы
 - `src/` – парсинг, сплит, дерево, метрики
+- `tests` - тесты
 - `main.cpp` – точка входа в программу 
 - `CMakeLists.txt` – файл сборки
 - `.clang-format` - форматтер кода
