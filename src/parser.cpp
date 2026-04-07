@@ -2,32 +2,50 @@
 
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 
 Dataset parse_csv(const std::string& filepath) {
   Dataset dataset;
-  std::ifstream file(filepath);
+  std::ifstream file;
+  file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   std::string line;
 
-  while (std::getline(file, line)) {
-    std::stringstream ss(line);
-    std::string value;
-    Sample sample;
+  try {
+    file.open(filepath);
 
-    for (int i = 0; i < 5; i++) {
-      if (!std::getline(ss, value, ',')) {
-        break;
+    while (true) {
+      try {
+        std::getline(file, line);
+      } catch (const std::ios_base::failure&) {
+        if (file.eof()) {
+          break;
+        }
+        throw std::runtime_error("failed to read CSV: " + filepath);
       }
 
-      double num = std::stod(value);
+      std::stringstream ss(line);
+      std::string value;
+      Sample sample;
 
-      if (i < 4) {
-        sample.features.push_back(num);
-      } else {
-        sample.target = static_cast<int>(num);
+      for (int i = 0; i < 5; i++) {
+        if (!std::getline(ss, value, ',')) {
+          break;
+        }
+
+        double num = std::stod(value);
+
+        if (i < 4) {
+          sample.features.push_back(num);
+        } else {
+          sample.target = static_cast<int>(num);
+        }
       }
+
+      dataset.add(sample);
     }
-
-    dataset.add(sample);
+  } catch (const std::ios_base::failure&) {
+    throw std::runtime_error("failed to read CSV: " + filepath);
   }
+
   return dataset;
 }

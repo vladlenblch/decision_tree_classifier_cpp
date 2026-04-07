@@ -1,3 +1,4 @@
+#include <exception>
 #include <iostream>
 
 #include "criteria.hpp"
@@ -8,7 +9,14 @@
 #include "types.hpp"
 
 int main() {
-  Dataset dataset = parse_csv("banknotes.txt");
+  Dataset dataset;
+  try {
+    dataset = parse_csv("banknotes.txt");
+  } catch (const std::exception& e) {
+    std::cerr << e.what() << std::endl;
+    return 1;
+  }
+
   SplitResult split = train_test_split(dataset, 0.2, 42);
 
   size_t train_0_count = split.train.target_0_count();
