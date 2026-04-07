@@ -6,8 +6,12 @@
 SplitResult train_test_split(const Dataset& dataset, float test_size, int seed) {
   SplitResult result;
 
+  result.train.samples.reserve(dataset.samples.size());
+  result.test.samples.reserve(dataset.samples.size());
   std::vector<size_t> class_0_indices;
   std::vector<size_t> class_1_indices;
+  class_0_indices.reserve(dataset.samples.size());
+  class_1_indices.reserve(dataset.samples.size());
 
   for (size_t i = 0; i < dataset.samples.size(); i++) {
     if (dataset.samples[i].target == 0) {

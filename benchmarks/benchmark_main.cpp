@@ -8,12 +8,14 @@
 
 Dataset create_dataset(size_t n_samples, size_t n_features = 4) {
   Dataset data;
+  data.samples.reserve(n_samples);
   std::mt19937 gen(42);
   std::uniform_real_distribution<> dist(-1.0, 1.0);
   std::uniform_int_distribution<> target_dist(0, 1);
 
   for (size_t i = 0; i < n_samples; i++) {
     Sample s;
+    s.features.reserve(n_features);
     for (size_t j = 0; j < n_features; j++) {
       s.features.push_back(dist(gen));
     }
