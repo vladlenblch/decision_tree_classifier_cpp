@@ -1,4 +1,6 @@
 #pragma once
+#include <algorithm>
+#include <ranges>
 #include <string>
 #include <vector>
 
@@ -19,13 +21,7 @@ struct Dataset {
   }
 
   size_t target_0_count() const {
-    size_t count = 0;
-    for (const Sample& sample : samples) {
-      if (sample.target == 0) {
-        count++;
-      }
-    }
-    return count;
+    return std::ranges::count_if(samples, [](const Sample& sample) { return sample.target == 0; });
   }
 
   size_t target_1_count() const {
