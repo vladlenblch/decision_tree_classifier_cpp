@@ -3,24 +3,23 @@
 #include <algorithm>
 #include <iostream>
 
-#include "criteria.hpp"
-
-DecisionTree::DecisionTree(int max_depth, int min_samples_split, const std::string& criterion)
-    : root(nullptr)
-    , max_depth(max_depth)
-    , min_samples_split(min_samples_split)
-    , criterion(criterion) {
+template <typename Criterion>
+DecisionTree<Criterion>::DecisionTree(int max_depth, int min_samples_split)
+    : root(nullptr), max_depth(max_depth), min_samples_split(min_samples_split) {
 }
 
-void DecisionTree::fit(const Dataset& dataset) {
+template <typename Criterion>
+void DecisionTree<Criterion>::fit(const Dataset& dataset) {
   root = build_tree(dataset, 0);
 }
 
-unsigned int DecisionTree::predict(const std::vector<double>& sample) const {
+template <typename Criterion>
+unsigned int DecisionTree<Criterion>::predict(const std::vector<double>& sample) const {
   return predict_sample(sample, root.get());
 }
 
-std::unique_ptr<TreeNode> DecisionTree::build_tree(const Dataset& dataset, int depth) {
+template <typename Criterion>
+std::unique_ptr<TreeNode> DecisionTree<Criterion>::build_tree(const Dataset& dataset, int depth) {
   if (depth > max_depth) {
     return std::make_unique<TreeNode>(get_majority_class(dataset));
   }
@@ -50,7 +49,10 @@ std::unique_ptr<TreeNode> DecisionTree::build_tree(const Dataset& dataset, int d
   );
 }
 
-DecisionTree::TreeSplitResult DecisionTree::find_best_split(const Dataset& dataset) {
+template <typename Criterion>
+typename DecisionTree<Criterion>::TreeSplitResult DecisionTree<Criterion>::find_best_split(
+    const Dataset& dataset
+) {
   TreeSplitResult best_split{-1, 0.0, -1.0};
 
   size_t n_features = dataset.samples[0].features.size();
@@ -76,16 +78,9 @@ DecisionTree::TreeSplitResult DecisionTree::find_best_split(const Dataset& datas
       DatasetSplitResult dataset_split =
           split_dataset(dataset, static_cast<int>(feature_idx), threshold);
 
-      double parent_impurity = 0.0, left_impurity = 0.0, right_impurity = 0.0;
-      if (criterion == "gini") {
-        parent_impurity = Criteria::gini(dataset);
-        left_impurity = Criteria::gini(dataset_split.left);
-        right_impurity = Criteria::gini(dataset_split.right);
-      } else if (criterion == "entropy") {
-        parent_impurity = Criteria::entropy(dataset);
-        left_impurity = Criteria::entropy(dataset_split.left);
-        right_impurity = Criteria::entropy(dataset_split.right);
-      }
+      double parent_impurity = Criterion::calculate(dataset);
+      double left_impurity = Criterion::calculate(dataset_split.left);
+      double right_impurity = Criterion::calculate(dataset_split.right);
 
       size_t n = dataset.size();
       size_t n_left = dataset_split.left.size();
@@ -103,7 +98,8 @@ DecisionTree::TreeSplitResult DecisionTree::find_best_split(const Dataset& datas
   return best_split;
 }
 
-DecisionTree::DatasetSplitResult DecisionTree::split_dataset(
+template <typename Criterion>
+typename DecisionTree<Criterion>::DatasetSplitResult DecisionTree<Criterion>::split_dataset(
     const Dataset& dataset, int feature_index, double threshold
 ) {
   DatasetSplitResult result;
@@ -118,7 +114,8 @@ DecisionTree::DatasetSplitResult DecisionTree::split_dataset(
   return result;
 }
 
-unsigned int DecisionTree::get_majority_class(const Dataset& dataset) const {
+template <typename Criterion>
+unsigned int DecisionTree<Criterion>::get_majority_class(const Dataset& dataset) const {
   if (dataset.target_0_count() > dataset.target_1_count()) {
     return 0;
   } else {
@@ -126,7 +123,8 @@ unsigned int DecisionTree::get_majority_class(const Dataset& dataset) const {
   }
 }
 
-unsigned int DecisionTree::predict_sample(
+template <typename Criterion>
+unsigned int DecisionTree<Criterion>::predict_sample(
     const std::vector<double>& sample, const TreeNode* node
 ) const {
   if (node->is_leaf) {
@@ -139,3 +137,6 @@ unsigned int DecisionTree::predict_sample(
     return predict_sample(sample, node->right.get());
   }
 }
+
+template class DecisionTree<GiniCriterion>;
+template class DecisionTree<EntropyCriterion>;

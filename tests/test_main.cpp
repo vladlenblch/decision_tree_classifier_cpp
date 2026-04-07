@@ -156,7 +156,7 @@ TEST(TreeTest, DepthZeroReturnsMajority) {
     data.samples.push_back(s);
   }
 
-  DecisionTree tree(0, 2, "gini");
+  DecisionTree<GiniCriterion> tree(0, 2);
   tree.fit(data);
 
   std::vector<double> sample = {1.0, 2.0, 3.0, 4.0};
@@ -173,8 +173,8 @@ TEST(TreeTest, BothCriteriaProduceValidResults) {
     data.samples.push_back(s);
   }
 
-  DecisionTree tree_gini(5, 2, "gini");
-  DecisionTree tree_entropy(5, 2, "entropy");
+  DecisionTree<GiniCriterion> tree_gini(5, 2);
+  DecisionTree<EntropyCriterion> tree_entropy(5, 2);
 
   tree_gini.fit(data);
   tree_entropy.fit(data);

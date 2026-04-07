@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "types.hpp"
+#include "criteria.hpp"
 
 struct TreeNode {
   bool is_leaf;
@@ -30,9 +30,10 @@ struct TreeNode {
   }
 };
 
+template <typename Criterion>
 class DecisionTree {
 public:
-  DecisionTree(int max_depth = 5, int min_samples_split = 2, const std::string& criterion = "gini");
+  DecisionTree(int max_depth = 5, int min_samples_split = 2);
   void fit(const Dataset& dataset);
   unsigned int predict(const std::vector<double>& sample) const;
 
@@ -40,7 +41,6 @@ private:
   std::unique_ptr<TreeNode> root;
   int max_depth;
   int min_samples_split;
-  std::string criterion;
 
   std::unique_ptr<TreeNode> build_tree(const Dataset& dataset, int depth);
 

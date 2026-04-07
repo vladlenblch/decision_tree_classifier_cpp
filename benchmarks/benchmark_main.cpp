@@ -41,7 +41,7 @@ Dataset create_dataset(size_t n_samples, unsigned int seed, size_t n_features = 
 
 static void BM_Predict_Depth5(benchmark::State& state) {
   Dataset data = create_dataset(1000, g_benchmark_seed);
-  DecisionTree tree(5, 2, "gini");
+  DecisionTree<GiniCriterion> tree(5, 2);
   tree.fit(data);
   std::vector<double> sample(4, 0.5);
 
@@ -53,7 +53,7 @@ BENCHMARK(BM_Predict_Depth5);
 
 static void BM_Predict_Depth10(benchmark::State& state) {
   Dataset data = create_dataset(1000, g_benchmark_seed);
-  DecisionTree tree(10, 2, "gini");
+  DecisionTree<GiniCriterion> tree(10, 2);
   tree.fit(data);
   std::vector<double> sample(4, 0.5);
 
@@ -69,7 +69,7 @@ static void BM_Fit_Gini_1000Samples(benchmark::State& state) {
     Dataset data = create_dataset(1000, g_benchmark_seed);
     state.ResumeTiming();
 
-    DecisionTree tree(5, 2, "gini");
+    DecisionTree<GiniCriterion> tree(5, 2);
     tree.fit(data);
   }
 }
@@ -81,7 +81,7 @@ static void BM_Fit_Entropy_1000Samples(benchmark::State& state) {
     Dataset data = create_dataset(1000, g_benchmark_seed);
     state.ResumeTiming();
 
-    DecisionTree tree(5, 2, "entropy");
+    DecisionTree<EntropyCriterion> tree(5, 2);
     tree.fit(data);
   }
 }
@@ -94,7 +94,7 @@ static void BM_Fit_Gini_5000Samples(benchmark::State& state) {
     Dataset data_copy = data;
     state.ResumeTiming();
 
-    DecisionTree tree(5, 2, "gini");
+    DecisionTree<GiniCriterion> tree(5, 2);
     tree.fit(data_copy);
   }
 }
@@ -107,7 +107,7 @@ static void BM_Fit_Entropy_5000Samples(benchmark::State& state) {
     Dataset data_copy = data;
     state.ResumeTiming();
 
-    DecisionTree tree(5, 2, "entropy");
+    DecisionTree<EntropyCriterion> tree(5, 2);
     tree.fit(data_copy);
   }
 }
