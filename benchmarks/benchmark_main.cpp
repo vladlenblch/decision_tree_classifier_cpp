@@ -25,7 +25,7 @@ Dataset create_dataset(size_t n_samples, unsigned int seed, size_t n_features = 
   data.samples.reserve(n_samples);
   std::mt19937 gen(seed);
   std::uniform_real_distribution<> dist(-1.0, 1.0);
-  std::uniform_int_distribution<> target_dist(0, 1);
+  std::uniform_int_distribution<unsigned int> target_dist(0, 1);
 
   for (size_t i = 0; i < n_samples; i++) {
     Sample s;

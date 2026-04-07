@@ -16,7 +16,7 @@ void DecisionTree::fit(const Dataset& dataset) {
   root = build_tree(dataset, 0);
 }
 
-int DecisionTree::predict(const std::vector<double>& sample) const {
+unsigned int DecisionTree::predict(const std::vector<double>& sample) const {
   return predict_sample(sample, root.get());
 }
 
@@ -118,7 +118,7 @@ DecisionTree::DatasetSplitResult DecisionTree::split_dataset(
   return result;
 }
 
-int DecisionTree::get_majority_class(const Dataset& dataset) const {
+unsigned int DecisionTree::get_majority_class(const Dataset& dataset) const {
   if (dataset.target_0_count() > dataset.target_1_count()) {
     return 0;
   } else {
@@ -126,7 +126,9 @@ int DecisionTree::get_majority_class(const Dataset& dataset) const {
   }
 }
 
-int DecisionTree::predict_sample(const std::vector<double>& sample, const TreeNode* node) const {
+unsigned int DecisionTree::predict_sample(
+    const std::vector<double>& sample, const TreeNode* node
+) const {
   if (node->is_leaf) {
     return node->predicted_class;
   }

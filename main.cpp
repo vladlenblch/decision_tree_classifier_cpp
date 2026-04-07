@@ -50,7 +50,7 @@ int main() {
     DecisionTree tree(5, 2, criterion);
     tree.fit(split.train);
 
-    std::vector<int> predictions;
+    std::vector<unsigned int> predictions;
     predictions.reserve(split.test.size());
     for (const Sample& sample : split.test.samples) {
       predictions.push_back(tree.predict(sample.features));

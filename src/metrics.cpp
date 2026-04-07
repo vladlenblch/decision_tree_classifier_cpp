@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <ranges>
 
-double Metrics::accuracy(const Dataset& dataset, const std::vector<int>& predictions) {
+double Metrics::accuracy(const Dataset& dataset, const std::vector<unsigned int>& predictions) {
   auto indices = std::views::iota(size_t{0}, dataset.size());
   int correct = static_cast<int>(std::ranges::count_if(indices, [&](size_t i) {
     return dataset.samples[i].target == predictions[i];
@@ -12,7 +12,7 @@ double Metrics::accuracy(const Dataset& dataset, const std::vector<int>& predict
   return static_cast<double>(correct) / dataset.size();
 }
 
-double Metrics::precision(const Dataset& dataset, const std::vector<int>& predictions) {
+double Metrics::precision(const Dataset& dataset, const std::vector<unsigned int>& predictions) {
   auto indices = std::views::iota(size_t{0}, dataset.size());
   int TP = static_cast<int>(std::ranges::count_if(indices, [&](size_t i) {
     return dataset.samples[i].target == 1 && predictions[i] == 1;
@@ -27,7 +27,7 @@ double Metrics::precision(const Dataset& dataset, const std::vector<int>& predic
   return static_cast<double>(TP) / (TP + FP);
 }
 
-double Metrics::recall(const Dataset& dataset, const std::vector<int>& predictions) {
+double Metrics::recall(const Dataset& dataset, const std::vector<unsigned int>& predictions) {
   auto indices = std::views::iota(size_t{0}, dataset.size());
   int TP = static_cast<int>(std::ranges::count_if(indices, [&](size_t i) {
     return dataset.samples[i].target == 1 && predictions[i] == 1;

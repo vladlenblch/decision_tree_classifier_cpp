@@ -5,13 +5,13 @@
 
 struct TreeNode {
   bool is_leaf;
-  int predicted_class;
+  unsigned int predicted_class;
   int feature_index;
   double threshold;
   std::unique_ptr<TreeNode> left;
   std::unique_ptr<TreeNode> right;
 
-  explicit TreeNode(int predicted_class)
+  explicit TreeNode(unsigned int predicted_class)
       : is_leaf(true), predicted_class(predicted_class), left(nullptr), right(nullptr) {
   }
 
@@ -22,7 +22,7 @@ struct TreeNode {
       std::unique_ptr<TreeNode> right
   )
       : is_leaf(false)
-      , predicted_class(-1)
+      , predicted_class(0)
       , feature_index(feature_index)
       , threshold(threshold)
       , left(std::move(left))
@@ -34,7 +34,7 @@ class DecisionTree {
 public:
   DecisionTree(int max_depth = 5, int min_samples_split = 2, const std::string& criterion = "gini");
   void fit(const Dataset& dataset);
-  int predict(const std::vector<double>& sample) const;
+  unsigned int predict(const std::vector<double>& sample) const;
 
 private:
   std::unique_ptr<TreeNode> root;
@@ -57,7 +57,7 @@ private:
   };
   DatasetSplitResult split_dataset(const Dataset& dataset, int feature_index, double threshold);
 
-  int get_majority_class(const Dataset& dataset) const;
+  unsigned int get_majority_class(const Dataset& dataset) const;
 
-  int predict_sample(const std::vector<double>& sample, const TreeNode* node) const;
+  unsigned int predict_sample(const std::vector<double>& sample, const TreeNode* node) const;
 };

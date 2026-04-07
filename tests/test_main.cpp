@@ -11,9 +11,9 @@
 // test 1: 100% accuracy
 TEST(MetricsTest, PerfectAccuracy) {
   Dataset data;
-  std::vector<int> predictions = {0, 1, 0, 1, 1};
+  std::vector<unsigned int> predictions = {0, 1, 0, 1, 1};
 
-  for (int target : {0, 1, 0, 1, 1}) {
+  for (unsigned int target : {0U, 1U, 0U, 1U, 1U}) {
     Sample s;
     s.target = target;
     data.samples.push_back(s);
@@ -26,9 +26,9 @@ TEST(MetricsTest, PerfectAccuracy) {
 // test 2: 0% accuracy
 TEST(MetricsTest, ZeroAccuracy) {
   Dataset data;
-  std::vector<int> predictions = {1, 0, 1, 0, 0};
+  std::vector<unsigned int> predictions = {1, 0, 1, 0, 0};
 
-  for (int target : {0, 1, 0, 1, 1}) {
+  for (unsigned int target : {0U, 1U, 0U, 1U, 1U}) {
     Sample s;
     s.target = target;
     data.samples.push_back(s);
@@ -41,9 +41,9 @@ TEST(MetricsTest, ZeroAccuracy) {
 // test 3: precision, TP=2, FP=1
 TEST(MetricsTest, PrecisionFormula) {
   Dataset data;
-  std::vector<int> predictions = {1, 1, 1, 0, 0};
+  std::vector<unsigned int> predictions = {1, 1, 1, 0, 0};
 
-  for (int target : {1, 1, 0, 0, 0}) {
+  for (unsigned int target : {1U, 1U, 0U, 0U, 0U}) {
     Sample s;
     s.target = target;
     data.samples.push_back(s);
@@ -56,9 +56,9 @@ TEST(MetricsTest, PrecisionFormula) {
 // test 4: precision, TP=0, FP=0
 TEST(MetricsTest, PrecisionNoPositives) {
   Dataset data;
-  std::vector<int> predictions = {0, 0, 0, 0, 0};
+  std::vector<unsigned int> predictions = {0, 0, 0, 0, 0};
 
-  for (int target : {0, 1, 0, 0, 0}) {
+  for (unsigned int target : {0U, 1U, 0U, 0U, 0U}) {
     Sample s;
     s.target = target;
     data.samples.push_back(s);
@@ -71,9 +71,9 @@ TEST(MetricsTest, PrecisionNoPositives) {
 // test 5: recall, TP=2, FN=1
 TEST(MetricsTest, RecallFormula) {
   Dataset data;
-  std::vector<int> predictions = {1, 0, 1, 0, 0};
+  std::vector<unsigned int> predictions = {1, 0, 1, 0, 0};
 
-  for (int target : {1, 1, 1, 0, 0}) {
+  for (unsigned int target : {1U, 1U, 1U, 0U, 0U}) {
     Sample s;
     s.target = target;
     data.samples.push_back(s);
@@ -86,9 +86,9 @@ TEST(MetricsTest, RecallFormula) {
 // test 6: recall, TP=0, FN=0
 TEST(MetricsTest, RecallNoActualPositives) {
   Dataset data;
-  std::vector<int> predictions = {1, 1, 1, 0, 0};
+  std::vector<unsigned int> predictions = {1, 1, 1, 0, 0};
 
-  for (int target : {0, 0, 0, 0, 0}) {
+  for (unsigned int target : {0U, 0U, 0U, 0U, 0U}) {
     Sample s;
     s.target = target;
     data.samples.push_back(s);
@@ -149,7 +149,7 @@ TEST(CriteriaTest, EntropyMaxImpurity) {
 // test 11: depth=0, always get_majority_class
 TEST(TreeTest, DepthZeroReturnsMajority) {
   Dataset data;
-  for (int t : {0, 0, 0, 1, 0}) {
+  for (unsigned int t : {0U, 0U, 0U, 1U, 0U}) {
     Sample s;
     s.features = {1.0, 2.0, 3.0, 4.0};
     s.target = t;
@@ -180,8 +180,8 @@ TEST(TreeTest, BothCriteriaProduceValidResults) {
   tree_entropy.fit(data);
 
   std::vector<double> sample = {10.0};
-  int pred_gini = tree_gini.predict(sample);
-  int pred_entropy = tree_entropy.predict(sample);
+  unsigned int pred_gini = tree_gini.predict(sample);
+  unsigned int pred_entropy = tree_entropy.predict(sample);
 
   EXPECT_TRUE(pred_gini == 0 || pred_gini == 1);
   EXPECT_TRUE(pred_entropy == 0 || pred_entropy == 1);

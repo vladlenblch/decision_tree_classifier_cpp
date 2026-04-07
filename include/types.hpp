@@ -6,7 +6,7 @@
 
 struct Sample {
   std::vector<double> features;
-  int target;
+  unsigned int target;
 };
 
 struct Dataset {
