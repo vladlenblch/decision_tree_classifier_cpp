@@ -10,18 +10,24 @@ cd decision_tree_classifier_cpp
 # собрать проект
 mkdir build
 cd build
+# настройка и сборка
 cmake .. -DCMAKE_BUILD_TYPE=Release
 make
 
 # запустить
 cd ..
+# запустить тесты
+./build/tree_test
+# запустить бенчмарки
+./build/tree_benchmark --benchmark_min_time=1s
+# запустить дерево 
 ./build/DecisionTreeClassifier
 ```
 
 ## О проекте
 
 Дерево решений, решающее проблему бинарной классификации. <br>
-В качестве данных был выбран датасет с характеристиками настоящих и поддельных купюр.
+В качестве данных был выбран датасет с характеристиками настоящих и поддельных купюр, состоящий только из числовых признаков.
 
 ### Датасет
 
@@ -68,15 +74,87 @@ Test Recall: 97.541
 -------------------------------
 ```
 
+### Результаты выполнения тестов
+
+```zsh
+[==========] Running 12 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 6 tests from MetricsTest
+[ RUN      ] MetricsTest.PerfectAccuracy
+[       OK ] MetricsTest.PerfectAccuracy (0 ms)
+[ RUN      ] MetricsTest.ZeroAccuracy
+[       OK ] MetricsTest.ZeroAccuracy (0 ms)
+[ RUN      ] MetricsTest.PrecisionFormula
+[       OK ] MetricsTest.PrecisionFormula (0 ms)
+[ RUN      ] MetricsTest.PrecisionNoPositives
+[       OK ] MetricsTest.PrecisionNoPositives (0 ms)
+[ RUN      ] MetricsTest.RecallFormula
+[       OK ] MetricsTest.RecallFormula (0 ms)
+[ RUN      ] MetricsTest.RecallNoActualPositives
+[       OK ] MetricsTest.RecallNoActualPositives (0 ms)
+[----------] 6 tests from MetricsTest (0 ms total)
+
+[----------] 4 tests from CriteriaTest
+[ RUN      ] CriteriaTest.GiniPureNode
+[       OK ] CriteriaTest.GiniPureNode (0 ms)
+[ RUN      ] CriteriaTest.GiniMaxImpurity
+[       OK ] CriteriaTest.GiniMaxImpurity (0 ms)
+[ RUN      ] CriteriaTest.EntropyPureNode
+[       OK ] CriteriaTest.EntropyPureNode (0 ms)
+[ RUN      ] CriteriaTest.EntropyMaxImpurity
+[       OK ] CriteriaTest.EntropyMaxImpurity (0 ms)
+[----------] 4 tests from CriteriaTest (0 ms total)
+
+[----------] 2 tests from TreeTest
+[ RUN      ] TreeTest.DepthZeroReturnsMajority
+[       OK ] TreeTest.DepthZeroReturnsMajority (0 ms)
+[ RUN      ] TreeTest.BothCriteriaProduceValidResults
+[       OK ] TreeTest.BothCriteriaProduceValidResults (3 ms)
+[----------] 2 tests from TreeTest (4 ms total)
+
+[----------] Global test environment tear-down
+[==========] 12 tests from 3 test suites ran. (4 ms total)
+[  PASSED  ] 12 tests.
+```
+
+### Результаты бенчмарков
+
+```zsh
+CPU Caches:
+  L1 Data 64 KiB
+  L1 Instruction 128 KiB
+  L2 Unified 4096 KiB (x10)
+Load Average: 2.47, 2.69, 2.51
+---------------------------------------------------------------------
+Benchmark                           Time             CPU   Iterations
+---------------------------------------------------------------------
+BM_Predict_Depth5                6.94 ns         6.94 ns    101503705
+BM_Predict_Depth10               17.9 ns         17.9 ns     38933230
+BM_Fit_Gini_1000Samples     385308896 ns    385301500 ns            2
+BM_Fit_Entropy_1000Samples  370184875 ns    370163500 ns            2
+BM_Fit_Gini_5000Samples    1.2683e+10 ns   1.2682e+10 ns            1
+BM_Fit_Entropy_5000Samples 1.2904e+10 ns   1.2900e+10 ns            1
+```
+
+### CI/CD
+
+Проект использует Github Actions для автоматической проверки кода:
+1) `git push` - при пуше начинается пайплайн
+2) `tests` - unit-тесты
+3) `benchmarks` - замеры производительности на датасетах разного размера. Требует успешного прохождения тестов
+
 ## Технологический стек и требования
 
 - `C++17`
 
 ## Структура проекта
 
-- `data/` – датасет
+- `.github/workflows/` - CI/CD
+- `benchmarks/` - бенчмарки
 - `include/` – заголовочные файлы
 - `src/` – парсинг, сплит, дерево, метрики
+- `tests/` - тесты
+- `banknotes.txt` - датасет
 - `main.cpp` – точка входа в программу 
 - `CMakeLists.txt` – файл сборки
 - `README.md` – текстовое описание проекта

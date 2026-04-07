@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++ cmake libgtest-dev
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug
+
+    - name: Build
+      run: cmake --build build
+
+    - name: Run unit tests
+      run: ctest --test-dir build --output-on-failure --verbose
+
+    - name: Run main program
+      run: |
+        echo "Running main classifier"
+        ./build/DecisionTreeClassifier
+        if [ $? -eq 0 ]; then
+            echo "Main program passed"
+        fi
+
+  benchmarks:
+    runs-on: ubuntu-latest
+    needs: tests
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++ cmake libgtest-dev libbenchmark-dev
+    
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+    
+    - name: Build
+      run: cmake --build build
+    
+    - name: Run benchmarks
+      run: |
+        echo "Running Google Benchmark"
+        ./build/tree_benchmark --benchmark_min_time=1s
