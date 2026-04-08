@@ -57,37 +57,46 @@ typename DecisionTree<Criterion>::TreeSplitResult DecisionTree<Criterion>::find_
 
   size_t n_features = dataset.samples[0].features.size();
   size_t n_samples = dataset.size();
+  size_t total_count_0 = dataset.target_0_count();
+  size_t total_count_1 = dataset.target_1_count();
+  double parent_impurity = Criterion::calculate_from_counts(total_count_0, total_count_1);
 
   for (size_t feature_idx = 0; feature_idx < n_features; feature_idx++) {
-    std::vector<double> values;
-    values.reserve(n_samples);
+    std::vector<std::pair<double, unsigned int>> feature_values;
+    feature_values.reserve(n_samples);
 
     for (const Sample& sample : dataset.samples) {
-      values.push_back(sample.features[feature_idx]);
+      feature_values.push_back({sample.features[feature_idx], sample.target});
     }
 
-    std::sort(values.begin(), values.end());
+    std::sort(feature_values.begin(), feature_values.end());
+
+    size_t left_count_0 = 0;
+    size_t left_count_1 = 0;
+    size_t right_count_0 = total_count_0;
+    size_t right_count_1 = total_count_1;
 
     for (size_t i = 0; i < n_samples - 1; i++) {
-      if (values[i] == values[i + 1]) {
+      if (feature_values[i].second == 0) {
+        left_count_0++;
+        right_count_0--;
+      } else {
+        left_count_1++;
+        right_count_1--;
+      }
+
+      if (feature_values[i].first == feature_values[i + 1].first) {
         continue;
       }
 
-      double threshold = (values[i] + values[i + 1]) / 2.0;
-
-      DatasetSplitResult dataset_split =
-          split_dataset(dataset, static_cast<int>(feature_idx), threshold);
-
-      double parent_impurity = Criterion::calculate(dataset);
-      double left_impurity = Criterion::calculate(dataset_split.left);
-      double right_impurity = Criterion::calculate(dataset_split.right);
-
-      size_t n = dataset.size();
-      size_t n_left = dataset_split.left.size();
-      size_t n_right = dataset_split.right.size();
+      double threshold = (feature_values[i].first + feature_values[i + 1].first) / 2.0;
+      size_t n_left = i + 1;
+      size_t n_right = n_samples - n_left;
+      double left_impurity = Criterion::calculate_from_counts(left_count_0, left_count_1);
+      double right_impurity = Criterion::calculate_from_counts(right_count_0, right_count_1);
 
       double children_impurity =
-          (n_left * left_impurity + n_right * right_impurity) / static_cast<double>(n);
+          (n_left * left_impurity + n_right * right_impurity) / static_cast<double>(n_samples);
       double gain = parent_impurity - children_impurity;
 
       if (gain > best_split.gain) {
@@ -103,6 +112,8 @@ typename DecisionTree<Criterion>::DatasetSplitResult DecisionTree<Criterion>::sp
     const Dataset& dataset, int feature_index, double threshold
 ) {
   DatasetSplitResult result;
+  result.left.samples.reserve(dataset.size());
+  result.right.samples.reserve(dataset.size());
 
   for (const Sample& sample : dataset.samples) {
     if (sample.features[feature_index] <= threshold) {
